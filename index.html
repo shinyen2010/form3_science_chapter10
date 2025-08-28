@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Exploration Folio - Slideshow</title>
+    <title>Space Exploration Folio - Complete Slideshow</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -449,6 +450,99 @@
             justify-content: center;
             align-items: center;
         }
+
+        .content-box {
+            background: rgba(15, 32, 55, 0.7);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #63b3ed;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .pdf-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(to right, #63b3ed, #2c5282);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .pdf-btn:hover {
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(to right, #7fbfef, #3c6699);
+        }
+
+        .print-btn {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(to right, #63b3ed, #2c5282);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .print-btn:hover {
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(to right, #7fbfef, #3c6699);
+        }
+
+        /* PDF styling */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .slide, .slide * {
+                visibility: visible;
+            }
+            .slide {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                opacity: 1;
+                page-break-after: always;
+            }
+            .navigation, .pdf-btn, .print-btn, .stars, .planet, .rocket, .orbit {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -467,6 +561,15 @@
     
     <!-- Rocket animation -->
     <div class="rocket">🚀</div>
+    
+    <!-- PDF and Print buttons -->
+    <button class="pdf-btn" id="pdf-btn" title="Download PDF">
+        <i class="fas fa-file-pdf"></i>
+    </button>
+    
+    <button class="print-btn" id="print-btn" title="Print">
+        <i class="fas fa-print"></i>
+    </button>
     
     <div class="slideshow-container">
         <div class="progress-bar" id="progress-bar"></div>
@@ -509,7 +612,7 @@
                 </div>
             </div>
             
-            <div class="slide-counter">Slide 1 of 6</div>
+            <div class="slide-counter">Slide 1 of 8</div>
         </div>
         
         <!-- Slide 2: Astronomy Development -->
@@ -553,7 +656,7 @@
                 <p style="position: absolute; color: rgba(255,255,255,0.7);">Figure 10.1: History of the Solar System model</p>
             </div>
             
-            <div class="slide-counter">Slide 2 of 6</div>
+            <div class="slide-counter">Slide 2 of 8</div>
         </div>
         
         <!-- Slide 3: Timeline -->
@@ -610,9 +713,19 @@
                     <div class="timeline-year">2000</div>
                     <div class="timeline-content">Malaysia's first microsatellite TiungSAT-1 launched</div>
                 </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-year">2002</div>
+                    <div class="timeline-content">National Space Agency (Agensi Angkasa Negara) established</div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-year">2011</div>
+                    <div class="timeline-content">Construction of International Space Station (ISS) completed</div>
+                </div>
             </div>
             
-            <div class="slide-counter">Slide 3 of 6</div>
+            <div class="slide-counter">Slide 3 of 8</div>
         </div>
         
         <!-- Slide 4: Space Technology -->
@@ -663,62 +776,219 @@
                 <p style="position: absolute; color: rgba(255,255,255,0.7);">Figure 10.3: Space telescopes</p>
             </div>
             
-            <div class="slide-counter">Slide 4 of 6</div>
+            <div class="slide-counter">Slide 4 of 8</div>
+        </div>
+
+        <!-- Slide 5: Rockets -->
+        <div class="slide" id="slide-5">
+            <div class="slide-header">
+                <h1>Rocket Technology</h1>
+            </div>
+            
+            <h2><i class="fas fa-rocket"></i> How Rockets Work</h2>
+            
+            <div class="two-column">
+                <div>
+                    <div class="content-box">
+                        <h3>Rocket Principle</h3>
+                        <p>Rockets are used widely in space explorations. When the fuel in a rocket burns, hot gases are released at high speed through the bottom of the rocket. The release of these gases produces a force which pushes the rocket upwards.</p>
+                    </div>
+
+                    <div class="content-box">
+                        <h3>Rocket Development</h3>
+                        <p>Rockets have evolved from simple fireworks to complex spacecraft:</p>
+                        <ul>
+                            <li>11th century: Chinese invented gunpowder and used primitive rockets in battles</li>
+                            <li>20th century: Modern rockets developed for space exploration</li>
+                            <li>Saturn V: Rocket used to send astronauts to the Moon</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="content-box">
+                        <h3>Rocket Types</h3>
+                        <p>Various rockets have been developed for different purposes:</p>
+                        <ul>
+                            <li>Launch vehicles: Saturn V, Falcon 9, Soyuz</li>
+                            <li>Space shuttles: Reusable spacecraft</li>
+                            <li>Interplanetary rockets: For missions to other planets</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-box">
+                        <h3>Rocket Question</h3>
+                        <p>Based on Photograph 10.1, which rocket was used to send astronauts to the Moon?</p>
+                        <p style="margin-top: 10px; padding: 10px; background: rgba(99, 179, 237, 0.2); border-radius: 5px;">
+                            <span class="highlight">Answer:</span> Saturn V rocket was used for Apollo Moon missions
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-counter">Slide 5 of 8</div>
         </div>
         
-        <!-- Slide 5: Remote Sensing -->
-        <div class="slide" id="slide-5">
+        <!-- Slide 6: Satellites -->
+        <div class="slide" id="slide-6">
+            <div class="slide-header">
+                <h1>Satellite Technology</h1>
+            </div>
+            
+            <h2><i class="fas fa-broadcast-tower"></i> Artificial Satellites</h2>
+            
+            <div class="two-column">
+                <div>
+                    <div class="content-box">
+                        <h3>First Satellite</h3>
+                        <p>The first satellite, Sputnik 1 was sent to outer space in 1957 by the USSR.</p>
+                    </div>
+
+                    <div class="content-box">
+                        <h3>Modern Satellites</h3>
+                        <p>Today, thousands of satellites orbit Earth for various purposes:</p>
+                        <ul>
+                            <li>Communication satellites</li>
+                            <li>Weather monitoring satellites</li>
+                            <li>Navigation satellites (GPS)</li>
+                            <li>Scientific research satellites</li>
+                            <li>Earth observation satellites</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="content-box">
+                        <h3>Satellite Questions</h3>
+                        <p>How many satellites are orbiting around Earth today?</p>
+                        <p style="margin-top: 10px; padding: 10px; background: rgba(99, 179, 237, 0.2); border-radius: 5px;">
+                            <span class="highlight">Answer:</span> As of 2023, there are over 7,000 active satellites orbiting Earth
+                        </p>
+                        
+                        <p style="margin-top: 15px;">Which country has the largest number of satellites?</p>
+                        <p style="margin-top: 10px; padding: 10px; background: rgba(99, 179, 237, 0.2); border-radius: 5px;">
+                            <span class="highlight">Answer:</span> The United States has the largest number of satellites
+                        </p>
+                    </div>
+
+                    <div class="content-box">
+                        <h3>Weather Satellites</h3>
+                        <p>Weather satellite GOES-16 gathers data on solar flares and weather patterns, helping with accurate weather forecasting.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slide-counter">Slide 6 of 8</div>
+        </div>
+        
+        <!-- Slide 7: Remote Sensing -->
+        <div class="slide" id="slide-7">
             <div class="slide-header">
                 <h1>Remote Sensing Technology</h1>
             </div>
             
             <h2><i class="fas fa-wifi"></i> Remote Sensing Applications</h2>
-            <p>Remote sensing involves gathering information from a distance using satellites and other technology:</p>
             
-            <ul>
-                <li>Malaysia's TungSAT-1 detects visible, ultraviolet, and infrared light</li>
-                <li>Data is sent to receiving stations at National Planetarium and Bangi, Selangor</li>
-                <li>Used in agriculture to detect suitable regions for development</li>
-                <li>Applied in geology to locate mineral sources and monitor land changes</li>
-                <li>Essential for disaster management to identify pollution and forest fires</li>
-                <li>Important for defense to detect intrusions</li>
-            </ul>
+            <div class="two-column">
+                <div>
+                    <div class="content-box">
+                        <h3>What is Remote Sensing?</h3>
+                        <p>Remote sensing is a method of gathering and recording information from a distance.</p>
+                    </div>
 
-            <div class="tech-card" style="margin-top: 20px;">
-                <h3>Space Probe Cassini</h3>
-                <p>In 2017, space probe Cassini was still active orbiting Saturn even after 20 years in space.</p>
+                    <div class="content-box">
+                        <h3>Malaysia's Remote Sensing</h3>
+                        <p>In Malaysia, remote sensing instruments are fitted to TiungSAT-1 to receive or detect visible, ultraviolet and infrared lights produced by objects on the surface or below the surface of Earth.</p>
+                        <p>The information gathered by TiungSAT-1 is sent to two data receiving stations:</p>
+                        <ul>
+                            <li>National Planetarium Station, Federal Territory of Kuala Lumpur</li>
+                            <li>Mission Control Station (MCCB), Bangi, Selangor</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="content-box">
+                        <h3>Applications of Remote Sensing</h3>
+                        <p>Remote sensing technology is used in various fields:</p>
+                        <ul>
+                            <li>Agriculture – Detect suitable regions for agricultural development</li>
+                            <li>Geology – Detect locations of mineral sources, mass depletion and land depletion</li>
+                            <li>Disaster management – Identify pollution and forest fires</li>
+                            <li>Defence – Detect intrusions of enemy ships, aircraft and vehicles</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-box">
+                        <h3>Cloud Pattern Analysis</h3>
+                        <p>Remote sensing cameras on TiungSAT-1 capture patterns and movement of clouds. This information is used for weather forecasting and climate studies.</p>
+                    </div>
+                </div>
             </div>
             
-            <div class="slide-counter">Slide 5 of 6</div>
+            <div class="slide-counter">Slide 7 of 8</div>
         </div>
         
-        <!-- Slide 6: Importance -->
-        <div class="slide" id="slide-6">
+        <!-- Slide 8: Importance -->
+        <div class="slide" id="slide-8">
             <div class="slide-header">
                 <h1>Importance of Space Technology</h1>
             </div>
             
             <h2><i class="fas fa-star"></i> Benefits of Space Exploration</h2>
-            <p>Space exploration technology has numerous benefits:</p>
             
-            <ul>
-                <li>Advances scientific knowledge and understanding of our universe</li>
-                <li>Drives technological innovation with practical Earth applications</li>
-                <li>Enables global communication through satellite networks</li>
-                <li>Improves weather forecasting and climate monitoring</li>
-                <li>Enhances national security and defense capabilities</li>
-                <li>Inspires new generations to pursue STEM education and careers</li>
-            </ul>
+            <div class="two-column">
+                <div>
+                    <div class="content-box">
+                        <h3>Scientific Knowledge</h3>
+                        <p>Space exploration advances our understanding of the universe, from the formation of galaxies to the possibility of life on other planets.</p>
+                    </div>
 
-            <div class="tech-card" style="margin-top: 20px;">
-                <h3>Malaysia's Role in Space Technology</h3>
-                <p>Malaysia has developed its space capabilities through:</p>
-                <ul>
-                    <li>TiungSAT-1 microsatellite program</li>
-                    <li>MEASAT communication satellites</li>
-                    <li>National Space Agency (Agensi Angkasa Negara)</li>
-                    <li>Participation in international space research</li>
-                </ul>
+                    <div class="content-box">
+                        <h3>Technological Innovation</h3>
+                        <p>Space technology drives innovation that benefits life on Earth:</p>
+                        <ul>
+                            <li>Satellite communications</li>
+                            <li>GPS navigation systems</li>
+                            <li>Weather forecasting</li>
+                            <li>Earth monitoring for climate change</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-box">
+                        <h3>International Cooperation</h3>
+                        <p>Space exploration promotes international collaboration, such as the International Space Station (ISS) involving multiple countries.</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="content-box">
+                        <h3>Economic Benefits</h3>
+                        <p>Space technology creates new industries and job opportunities:</p>
+                        <ul>
+                            <li>Satellite communications industry</li>
+                            <li>Space tourism development</li>
+                            <li>Asteroid mining possibilities</li>
+                            <li>Technology spin-offs for everyday use</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-box">
+                        <h3>Inspiration for STEM</h3>
+                        <p>Space exploration inspires new generations to pursue education and careers in science, technology, engineering, and mathematics (STEM).</p>
+                    </div>
+
+                    <div class="content-box">
+                        <h3>Malaysia's Space Program</h3>
+                        <p>Malaysia has developed its space capabilities through:</p>
+                        <ul>
+                            <li>TiungSAT-1 microsatellite program</li>
+                            <li>MEASAT communication satellites</li>
+                            <li>National Space Agency (Agensi Angkasa Negara)</li>
+                            <li>Participation in international space research</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
             
             <div style="text-align: center; margin-top: 30px;">
@@ -726,7 +996,7 @@
                 <p>Prepared by: Te Shin Yen | Subject: Science | Teacher: Cikgu Nurizan</p>
             </div>
             
-            <div class="slide-counter">Slide 6 of 6</div>
+            <div class="slide-counter">Slide 8 of 8</div>
         </div>
         
         <!-- Navigation -->
@@ -767,6 +1037,8 @@
             const progressBar = document.getElementById('progress-bar');
             const prevBtn = document.getElementById('prev-btn');
             const nextBtn = document.getElementById('next-btn');
+            const pdfBtn = document.getElementById('pdf-btn');
+            const printBtn = document.getElementById('print-btn');
             let currentSlide = 0;
             
             // Create indicators
@@ -782,7 +1054,7 @@
             function updateUI() {
                 progressBar.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
                 
-                document.querySelectorAll('.indicator').forEach((indicator, index) => {
+                document.querySelectorAll('.indicator').forEach((indicator, index) {
                     if (index === currentSlide) {
                         indicator.classList.add('active');
                     } else {
@@ -813,9 +1085,55 @@
                 goToSlide(currentSlide - 1);
             }
             
+            // Generate PDF
+            function generatePDF() {
+                // Create a clone of the slideshow container
+                const slideshowClone = document.querySelector('.slideshow-container').cloneNode(true);
+                
+                // Remove navigation elements from the clone
+                slideshowClone.querySelector('.navigation').remove();
+                slideshowClone.querySelector('.slide-indicators').remove();
+                slideshowClone.querySelector('.progress-bar').remove();
+                
+                // Make all slides visible for printing
+                const slideClones = slideshowClone.querySelectorAll('.slide');
+                slideClones.forEach(slide => {
+                    slide.style.position = 'relative';
+                    slide.style.opacity = '1';
+                    slide.style.height = 'auto';
+                    slide.style.marginBottom = '20px';
+                    slide.classList.remove('active');
+                });
+                
+                // Create a container for PDF content
+                const pdfContainer = document.createElement('div');
+                pdfContainer.style.padding = '20px';
+                pdfContainer.style.backgroundColor = 'white';
+                pdfContainer.style.color = 'black';
+                pdfContainer.appendChild(slideshowClone);
+                
+                // Generate PDF
+                const options = {
+                    margin: 10,
+                    filename: 'space-exploration-folio.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                };
+                
+                html2pdf().set(options).from(pdfContainer).save();
+            }
+            
+            // Print functionality
+            function printSlideshow() {
+                window.print();
+            }
+            
             // Event listeners for buttons
             nextBtn.addEventListener('click', nextSlide);
             prevBtn.addEventListener('click', prevSlide);
+            pdfBtn.addEventListener('click', generatePDF);
+            printBtn.addEventListener('click', printSlideshow);
             
             // Keyboard navigation
             document.addEventListener('keydown', (e) => {
